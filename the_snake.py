@@ -63,7 +63,8 @@ class Apple(GameObject):
 
     def randomize_position(self):
         """
-        Добавил ограничение, исключающее генерацию
+        Случайное положение яблока.
+        Ограничил генерацию
         яблока в занимаемой змейкой клетке.
         """
         while True:
@@ -107,7 +108,7 @@ class Snake(GameObject):
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
     def update_direction(self):
-        """Обновляет направление движения змейки после нажатия клавиш."""
+        """Обновляет направление движения змейки после нажатия на клавиши."""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
@@ -119,26 +120,20 @@ class Snake(GameObject):
         """
         self.get_head_position()
 
+        x, y = self.head_position
         if self.direction == RIGHT:
-            new_head = (self.head_position[0]
-                        + GRID_SIZE, self.head_position[1])
-            if new_head[0] >= SCREEN_WIDTH:
-                new_head = (0, self.head_position[1])
+            x += GRID_SIZE
         elif self.direction == LEFT:
-            new_head = (self.head_position[0]
-                        - GRID_SIZE, self.head_position[1])
-            if new_head[0] < 0:
-                new_head = (SCREEN_WIDTH - GRID_SIZE, self.head_position[1])
+            x -= GRID_SIZE
         elif self.direction == UP:
-            new_head = (self.head_position[0],
-                        self.head_position[1] - GRID_SIZE)
-            if new_head[1] < 0:
-                new_head = (self.head_position[0], SCREEN_HEIGHT - GRID_SIZE)
+            y -= GRID_SIZE
         elif self.direction == DOWN:
-            new_head = (self.head_position[0],
-                        self.head_position[1] + GRID_SIZE)
-            if new_head[1] >= SCREEN_HEIGHT:
-                new_head = (self.head_position[0], 0)
+            y += GRID_SIZE
+
+        x = x % SCREEN_WIDTH
+        y = y % SCREEN_HEIGHT
+
+        new_head = (x, y)
 
         if new_head in self.positions[1:]:
             self.reset()
