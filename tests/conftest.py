@@ -4,7 +4,7 @@ from multiprocessing import Process
 from pathlib import Path
 from typing import Any
 
-from pg.time import Clock
+from pygame.time import Clock
 import pytest
 import pytest_timeout
 
