@@ -1,4 +1,5 @@
 from random import randint, choice
+
 import pygame as pg
 
 
@@ -61,7 +62,8 @@ class GameObject:
     def draw(self):
         """Отображение объекта на экране."""
         raise NotImplementedError(
-            'Метод draw должен быть переопределён в каждом классе.'
+            f'Метод draw должен быть переопределён в классе '
+            f'{self.__class__.__name__}.'
         )
 
     def draw_rect(self, position, body_color, border_color=None):
@@ -77,10 +79,8 @@ class Apple(GameObject):
 
     def __init__(self, body_color=APPLE_COLOR, occupied_cells=None):
         """Инициализация яблока и его случайное размещение."""
-        if occupied_cells is None:
-            occupied_cells = []
         super().__init__(body_color)
-        self.randomize_position(occupied_cells)
+        self.randomize_position(occupied_cells or [])
 
     def randomize_position(self, occupied_cells):
         """
@@ -108,7 +108,7 @@ class Snake(GameObject):
         """Инициализация змейки с начальной позицией, длиной, направлением."""
         super().__init__(body_color)
         self.reset()
-        self.last = self.positions[-1]
+        self.direction = RIGHT
 
     def draw(self):
         """Отображает змейку на экране."""
@@ -120,9 +120,14 @@ class Snake(GameObject):
         """Двигает змейку в заданном направлении."""
         head_x, head_y = self.get_head_position()
         direction_x, direction_y = self.direction
-        direction_x = (head_x + (direction_x * GRID_SIZE)) % SCREEN_WIDTH
-        direction_y = (head_y + (direction_y * GRID_SIZE)) % SCREEN_HEIGHT
-        return (direction_x, direction_y)
+        self.position = (
+            (head_x + (direction_x * GRID_SIZE)) % SCREEN_WIDTH,
+            (head_y + (direction_y * GRID_SIZE)) % SCREEN_HEIGHT)
+        self.positions.insert(0, self.position)
+        if len(self.positions) > self.length:
+            self.last = self.positions.pop()
+        else:
+            self.last = None
 
     def get_head_position(self):
         """Возвращает позицию головы змейки."""
@@ -170,22 +175,14 @@ def main():
         clock.tick(SPEED)
         if not handle_keys(snake):
             break
-        snake.position = snake.move()
-        snake.last = snake.positions[-1]
-        if snake.position in snake.positions:
+        snake.move()
+        if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             apple.randomize_position(snake.positions)
             screen.fill(BOARD_BACKGROUND_COLOR)
-        else:
-            snake.positions.insert(0, snake.position)
-            if snake.position == apple.position:
-                snake.length += 1
-                apple.randomize_position(snake.positions)
-            if len(snake.positions) > snake.length:
-                snake.positions.pop()
-            else:
-                None
-
+        elif snake.position == apple.position:
+            snake.length += 1
+            apple.randomize_position(snake.positions)
         snake.draw()
         apple.draw()
         pg.display.update()
