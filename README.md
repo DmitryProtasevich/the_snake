@@ -65,6 +65,6 @@ python snake.py
 Основные классы и методы описаны с использованием docstrings.
 
 ### АВТОР
-Дмитрий Протасевич 
-GitHub: https://github.com/DmitryProtasevich
-Telegram: https://t.me/DmitryProtasevich/
+Дмитрий Протасевич  
+GitHub: https://github.com/DmitryProtasevich  
+Telegram: https://t.me/DmitryProtasevich/  
