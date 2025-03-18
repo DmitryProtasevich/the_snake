@@ -66,5 +66,5 @@ python snake.py
 
 ### АВТОР
 Дмитрий Протасевич 
-https://github.com/DmitryProtasevich
-https://t.me/DmitryProtasevich/
+GitHub: https://github.com/DmitryProtasevich
+Telegram: https://t.me/DmitryProtasevich/
